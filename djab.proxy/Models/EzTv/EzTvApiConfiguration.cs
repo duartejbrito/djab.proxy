@@ -5,5 +5,6 @@ namespace djab.proxy.Models.EzTv
     public class EzTvApiConfiguration : IApiConfiguration
     {
         public string BaseUrl { get; set; }
+        public bool ByPass { get; set; }
     }
 }

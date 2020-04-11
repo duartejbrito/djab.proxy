@@ -1,4 +1,6 @@
-﻿using djab.proxy.Models.Interfaces;
+﻿using CloudflareSolverRe;
+using CloudflareSolverRe.Types;
+using djab.proxy.Models.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -9,11 +11,24 @@ namespace djab.proxy.Services
 {
     public class ApiHttpClient<T> where T : IApiConfiguration
     {
+
+        private CloudflareSolver _cf;
+        private HttpClientHandler _handler;
         private HttpClient _client;
 
         public ApiHttpClient(T configuration)
         {
-            _client = new HttpClient()
+            if (configuration.ByPass)
+            {
+                _cf = new CloudflareSolver
+                {
+                    MaxTries = 3,
+                    ClearanceDelay = 3000
+                };
+            }
+
+            _handler = new HttpClientHandler();
+            _client = new HttpClient(_handler)
             {
                 BaseAddress = new Uri(configuration.BaseUrl),
             };
@@ -21,6 +36,13 @@ namespace djab.proxy.Services
 
         public async Task<TModel> Get<TModel>(string path)
         {
+            if (_cf != null)
+            {
+                var resultCloudflare = await _cf.Solve(_client, _handler, new Uri(_client.BaseAddress, path));
+                if (!resultCloudflare.Success)
+                    HandleError(resultCloudflare);
+            }
+
             var result = await _client.GetAsync(path);
             if (!result.IsSuccessStatusCode)
                 HandleError(result);
@@ -36,6 +58,15 @@ namespace djab.proxy.Services
             stringBuilder.AppendLine("An error occurred while invoking API");
             stringBuilder.AppendLine($"[Status Code]: {(int)result.StatusCode}");
             stringBuilder.Append($"[Message]: {message}");
+
+            throw new Exception(stringBuilder.ToString());
+        }
+
+        public static void HandleError(SolveResult result)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("An error occurred while bypassing cloudflare");
+            stringBuilder.AppendLine($"[Reason]: {result.FailReason}");
 
             throw new Exception(stringBuilder.ToString());
         }

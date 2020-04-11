@@ -5,6 +5,6 @@ namespace djab.proxy.Services
 {
     public interface IYtsService
     {
-        Task<YtsResponse<YtsMovies>> Get(int page, string quality = "720p");
+        Task<YtsResponse<YtsMovies>> Get(int page, YtsQuality quality = YtsQuality.Low);
     }
 }

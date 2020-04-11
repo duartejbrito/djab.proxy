@@ -3,5 +3,6 @@
     public interface IApiConfiguration
     {
         public string BaseUrl { get; set; }
+        public bool ByPass { get; set; }
     }
 }

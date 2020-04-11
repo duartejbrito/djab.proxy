@@ -16,11 +16,9 @@ namespace djab.proxy.Services
             _client = new ApiHttpClient<YtsApiConfiguration>(configuration.Value);
         }
 
-        public async Task<YtsResponse<YtsMovies>> Get(int page, string quality = "720p")
+        public async Task<YtsResponse<YtsMovies>> Get(int page, YtsQuality quality = YtsQuality.Low)
         {
-            YtsQuality parsedQuality = Enum<YtsQuality>.TryParseByDescription(quality);
-
-            var response = await _client.Get<YtsResponse<YtsMovies>>($"/api/v2/list_movies.json?quality={parsedQuality.GetDescription()}&page={page}&sort_by=date_added");
+            var response = await _client.Get<YtsResponse<YtsMovies>>($"/api/v2/list_movies.json?quality={quality.GetDescription()}&page={page}&sort_by=date_added");
 
             return response;
         }

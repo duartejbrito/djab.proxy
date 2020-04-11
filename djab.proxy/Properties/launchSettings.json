@@ -29,7 +29,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/rss",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/rss/movies",
       "publishAllPorts": true,
       "useSSL": true
     }

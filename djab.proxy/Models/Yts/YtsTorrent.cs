@@ -4,5 +4,6 @@
     {
         public string url { get; set; }
         public string quality { get; set; }
+        public long size_bytes { get; set; }
     }
 }
