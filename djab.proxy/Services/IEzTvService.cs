@@ -5,6 +5,6 @@ namespace djab.proxy.Services
 {
     public interface IEzTvService
     {
-        Task<EzTvResponse> Get(int page = 1, int limit = 100);
+        Task<EzTvResponse> Get(int page = 1, int limit = 20, long? imdbId = null);
     }
 }
