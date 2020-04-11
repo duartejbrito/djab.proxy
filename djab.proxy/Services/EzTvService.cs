@@ -15,11 +15,11 @@ namespace djab.proxy.Services
             _client = new ApiHttpClient<EzTvApiConfiguration>(configuration.Value);
         }
 
-        public async Task<EzTvResponse> Get(int page = 1, int limit = 20, long? imdbId = null)
+        public async Task<EzTvResponse> Get(string imdbId, int page = 1, int limit = 20)
         {
             string path = $"/api/get-torrents?limit={limit}&page={page}";
 
-            if (imdbId != null)
+            if (!string.IsNullOrEmpty(imdbId))
             {
                 path = $"{path}&imdb_id={imdbId}";
             }

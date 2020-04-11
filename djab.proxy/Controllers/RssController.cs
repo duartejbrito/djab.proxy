@@ -48,9 +48,9 @@ namespace djab.proxy.Controllers
 
         [HttpGet]
         [Route("tvshows/{page:int=1}/{limit?}/{imdbId?}")]
-        public FileContentResult Get(int page = 1, int limit = 20, long? imdbId = null)
+        public FileContentResult Get(string imdbId, int page = 1, int limit = 20)
         {
-            var result = _ezTvService.Get(page, limit, imdbId).Result;
+            var result = _ezTvService.Get(imdbId, page, limit).Result;
             return ToFeed(result);
         }
 
