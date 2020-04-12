@@ -31,7 +31,7 @@ namespace djab.proxy
             services.AddHttpContextAccessor();
 
             var _serviceProvider = services.BuildServiceProvider();
-            services.AddAutoMapper(typeof(Startup));
+            // services.AddAutoMapper(typeof(Startup));
             services.AddAutomapperConfiguration(_serviceProvider.GetService<IHttpContextAccessor>());
 
             services.AddInjectableServices();

@@ -27,6 +27,7 @@ namespace djab.proxy.Extensions
             var automapperConfig = new MapperConfiguration(configuration =>
             {
                 configuration.AddProfile(new YtsRssProfile(httpContextAccessor));
+                configuration.AddProfile(new EzTvRssProfile());
             });
 
             var autoMapper = automapperConfig.CreateMapper();
