@@ -1,8 +1,10 @@
 ﻿using CloudflareSolverRe;
 using CloudflareSolverRe.Types;
 using djab.proxy.Models.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +50,25 @@ namespace djab.proxy.Services
                 HandleError(result);
             var response = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TModel>(response);
+        }
+
+        public async Task<FileStreamResult> File(string path)
+        {
+            if (_cf != null)
+            {
+                var resultCloudflare = await _cf.Solve(_client, _handler, new Uri(_client.BaseAddress, path));
+                if (!resultCloudflare.Success)
+                    HandleError(resultCloudflare);
+            }
+
+            var result = await _client.GetAsync(path);
+            if (!result.IsSuccessStatusCode)
+                HandleError(result);
+            var response = await result.Content.ReadAsStreamAsync();
+            return new FileStreamResult(response, result.Content.Headers.ContentType.MediaType)
+            {
+                FileDownloadName = result.Content.Headers.ContentDisposition.FileName.Trim('"')
+            };
         }
 
         public static void HandleError(HttpResponseMessage result)

@@ -4,6 +4,7 @@ using djab.proxy.Models.EzTv;
 using djab.proxy.Models.Yts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +30,9 @@ namespace djab.proxy
 
             services.AddHttpContextAccessor();
 
+            var _serviceProvider = services.BuildServiceProvider();
             services.AddAutoMapper(typeof(Startup));
+            services.AddAutomapperConfiguration(_serviceProvider.GetService<IHttpContextAccessor>());
 
             services.AddInjectableServices();
         }

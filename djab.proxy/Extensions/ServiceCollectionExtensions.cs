@@ -1,4 +1,7 @@
-﻿using djab.proxy.Injection;
+﻿using AutoMapper;
+using djab.proxy.Injection;
+using djab.proxy.Profiles;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Collections.Generic;
@@ -17,6 +20,18 @@ namespace djab.proxy.Extensions
                 services.TryAdd(new ServiceDescriptor(attribute.Interface ?? serviceType, serviceType, attribute.Lifetime ?? serviceLifetime));
             }
             return services;
+        }
+
+        public static void AddAutomapperConfiguration(this IServiceCollection services, IHttpContextAccessor httpContextAccessor)
+        {
+            var automapperConfig = new MapperConfiguration(configuration =>
+            {
+                configuration.AddProfile(new YtsRssProfile(httpContextAccessor));
+            });
+
+            var autoMapper = automapperConfig.CreateMapper();
+
+            services.AddSingleton(autoMapper);
         }
     }
 }

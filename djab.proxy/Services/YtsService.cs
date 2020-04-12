@@ -1,6 +1,7 @@
 ﻿using djab.proxy.Extensions;
 using djab.proxy.Injection;
 using djab.proxy.Models.Yts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
@@ -19,6 +20,13 @@ namespace djab.proxy.Services
         public async Task<YtsResponse<YtsMovies>> Get(int page, YtsQuality quality = YtsQuality.Low)
         {
             var response = await _client.Get<YtsResponse<YtsMovies>>($"/api/v2/list_movies.json?quality={quality.GetDescription()}&page={page}&sort_by=date_added");
+
+            return response;
+        }
+
+        public async Task<FileStreamResult> Torrent(string torrent)
+        {
+            var response = await _client.File($"/torrent/download/{torrent}");
 
             return response;
         }
